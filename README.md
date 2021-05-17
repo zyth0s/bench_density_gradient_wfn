@@ -24,7 +24,7 @@ Calculating the density gradient of CH₄ at a point x10 [jl]:
 Feelings
 ========
 
-[C++] is the fastest [small margin] but also more tedious.
+* **C++** is the fastest [small margin] but also more tedious.
       Does C++ have multidimensional dynamic arrays? Yes,
       valarrays (or vectors if you wish but not for numerics).
       The former are poorly documented and have terrible slicing.
@@ -38,10 +38,10 @@ Feelings
       with those libraries [messy]. And the compiler is more silent [bug land].
       Would require storing a copy of Eigen (I do not like adding 3rd party code).
 
-[Fortran] is fast. Perfect for this task. The routine is simple enough to not
+* **Fortran** is fast. Perfect for this task. The routine is simple enough to not
           experience any of its drawbacks. No dependencies. Best choice.
 
-[Rust] is equally fast. It requires a bit more of work [Fortran < Rust < C++]
+* **Rust** is equally fast. It requires a bit more of work [Fortran < Rust < C++]
        because multidimensional arrays are not first
        order citizens. But it is trivial to add ndarray.
        More verbose for the same reason, also due
@@ -55,7 +55,7 @@ Feelings
        but it is worth keeping an eye on Rust, definetely.
 
 
-[Julia] is a joy. Interactive, expressive, but
+* **Julia** is a joy. Interactive, expressive, but
         slightly slower (2-3x) [loable]. That is crucial
         for this routine. Looking for ways to speed it up.
         If speed equals... this stays.
