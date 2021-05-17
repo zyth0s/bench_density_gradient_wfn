@@ -8,42 +8,42 @@ Requires a private package.
 
 ```
 Calculating the density gradient of CH₄ at a point (x10) [f]:
-  17.677 μs (2 allocations: 224 bytes)
-
-Calculating the density gradient of CH₄ at a point (x10) [cpp]:
-  19.745 μs (2 allocations: 224 bytes)
+  17.897 μs (2 allocations: 224 bytes)
 
 Calculating the density gradient of CH₄ at a point (x10) [rs]:
-  31.248 μs (2 allocations: 224 bytes)
+  18.343 μs (2 allocations: 224 bytes)
+
+Calculating the density gradient of CH₄ at a point (x10) [cpp]:
+  19.656 μs (2 allocations: 224 bytes)
 
 Calculating the density gradient of CH₄ at a point (x10) [jl]:
-  64.193 μs (862 allocations: 95.38 KiB)
+  65.251 μs (862 allocations: 95.38 KiB)
 
 
 Calculating the density gradient of C₂H₄ at a point (x10) [f]:
-  26.512 μs (2 allocations: 224 bytes)
-
-Calculating the density gradient of C₂H₄ at a point (x10) [cpp]:
-  45.543 μs (2 allocations: 224 bytes)
+  26.353 μs (2 allocations: 224 bytes)
 
 Calculating the density gradient of C₂H₄ at a point (x10) [rs]:
-  79.007 μs (2 allocations: 224 bytes)
+  41.708 μs (2 allocations: 224 bytes)
+
+Calculating the density gradient of C₂H₄ at a point (x10) [cpp]:
+  45.770 μs (2 allocations: 224 bytes)
 
 Calculating the density gradient of C₂H₄ at a point (x10) [jl]:
-  141.856 μs (1662 allocations: 183.66 KiB)
+  144.770 μs (1662 allocations: 183.66 KiB)
 
 
 Calculating the density gradient of imidazol at a point (x10) [f]:
-  66.627 μs (2 allocations: 224 bytes)
-
-Calculating the density gradient of imidazol at a point (x10) [cpp]:
-  123.802 μs (2 allocations: 224 bytes)
+  66.975 μs (2 allocations: 224 bytes)
 
 Calculating the density gradient of imidazol at a point (x10) [rs]:
-  184.032 μs (2 allocations: 224 bytes)
+  115.989 μs (2 allocations: 224 bytes)
+
+Calculating the density gradient of imidazol at a point (x10) [cpp]:
+  123.619 μs (2 allocations: 224 bytes)
 
 Calculating the density gradient of imidazol at a point (x10) [jl]:
-  315.007 μs (2872 allocations: 319.44 KiB)
+  313.479 μs (2872 allocations: 319.44 KiB)
 
 ```
 
