@@ -17,44 +17,44 @@ typedef Matrix<int64_t, Dynamic, Dynamic> MatrixXi64;
 
 extern "C" {
   int density_gradient(
-                      double* point_ptr,
-                      const int64_t nmo,
-                      const int64_t natm,
-                      const int64_t nprims,
-                      const int64_t mgrp,
-                      const int64_t ngto_h,
-                      int64_t* ngroup_ptr,
-                      int64_t* ityp_ptr,
-                      int64_t* nzexp_ptr,
-                      int64_t* nlm_ptr,
-                      int64_t* nuexp_ptr,
-                      double* occ_ptr,
-                      double* oexp_ptr,
-                      double* xyz_ptr,
-                      double* rcutte_ptr,
-                      double* coef_ptr,
-                      double* grad_ptr
+                       double* point_ptr,
+                       const int64_t nmo,
+                       const int64_t natm,
+                       const int64_t nprims,
+                       const int64_t mgrp,
+                       const int64_t ngto_h,
+                       int64_t* ngroup_ptr,
+                       int64_t* ityp_ptr,
+                       int64_t* nzexp_ptr,
+                       int64_t* nlm_ptr,
+                       int64_t* nuexp_ptr,
+                       double* occ_ptr,
+                       double* oexp_ptr,
+                       double* xyz_ptr,
+                       double* rcutte_ptr,
+                       double* coef_ptr,
+                       double* grad_ptr
                       ) ;
 }
 
 int density_gradient(
-										double* point_ptr,
-										const int64_t nmo,
-										const int64_t natm,
-										const int64_t nprims,
-										const int64_t mgrp,
-										const int64_t ngto_h,
-										int64_t* ngroup_ptr,
-										int64_t* ityp_ptr,
-										int64_t* nzexp_ptr,
-										int64_t* nlm_ptr,
-										int64_t* nuexp_ptr,
-										double* occ_ptr,
-										double* oexp_ptr,
-										double* xyz_ptr,
-										double* rcutte_ptr,
-										double* coef_ptr,
-										double* grad_ptr
+                     double* point_ptr,
+                     const int64_t nmo,
+                     const int64_t natm,
+                     const int64_t nprims,
+                     const int64_t mgrp,
+                     const int64_t ngto_h,
+                     int64_t* ngroup_ptr,
+                     int64_t* ityp_ptr,
+                     int64_t* nzexp_ptr,
+                     int64_t* nlm_ptr,
+                     int64_t* nuexp_ptr,
+                     double* occ_ptr,
+                     double* oexp_ptr,
+                     double* xyz_ptr,
+                     double* rcutte_ptr,
+                     double* coef_ptr,
+                     double* grad_ptr
 										) {
 
   // input & output variables
