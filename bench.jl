@@ -163,7 +163,7 @@ function bench_library(lang=:f,system=:ch4)
 end
 
 for system in [:ch4, :c2h4, :imidazol]
-   for lang in [:f,:cpp,:rs,:jl]
+   for lang in [:f,:rs,:cpp,:jl]
       bench_library(lang, system)
    end
    println()

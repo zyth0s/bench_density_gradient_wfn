@@ -76,6 +76,10 @@ int density_gradient(
   Vector3d xcoor = Vector3d::Zero(3);
   VectorXd gun   = VectorXd::Zero(nmo);
   MatrixXd gun1  = MatrixXd::Zero(nmo,3);
+  int k, i, itip, n;
+  double dis2, ori, dp2, aexp, x2, x;
+  double f12, f123, fa, fb, fc, cfj;
+  double fac, facgun;
 
   grad.setZero();
 
@@ -85,33 +89,32 @@ int density_gradient(
     xcoor(0) = point(0) - xyz(ic,0);
     xcoor(1) = point(1) - xyz(ic,1);
     xcoor(2) = point(2) - xyz(ic,2);
-    double dis2 = xcoor.cwiseAbs2().sum();
+    dis2 = xcoor.cwiseAbs2().sum();
     // Loop over different shell in this atom
     for ( int m=0; m<ngroup(ic); m++) {
-      int k = nuexp(ic, m, 0)-1;
+      k = nuexp(ic, m, 0)-1;
       // Skip to compute this primitive if distance is too big.
       if (dis2 > rcutte(ic, m) * rcutte(ic, m) ) {
         continue;
       }
-      double ori = -oexp(k);
-      double dp2 = 2.0*ori;
+      ori = -oexp(k);
+      dp2 = 2.0*ori;
       // All primitives in a shell share the same exponent.
-      double aexp = exp( ori * dis2 );
+      aexp = exp( ori * dis2 );
       // Loop over the different primitives in this shell.
       for ( int jj=0; jj<nzexp(ic,m); jj++) {
         // "i" is the original index of the primitive in the WFN.
-        int i = nuexp(ic, m, jj)-1;
-        int itip = ityp(i)-1;
+        i = nuexp(ic, m, jj)-1;
+        itip = ityp(i)-1;
         // Integer coefficients.
         Vector3i64 it = Vector3i64::Zero();
         it(0) = nlm(itip,0);
         it(1) = nlm(itip,1);
         it(2) = nlm(itip,2);
-        double x2;
 
         for ( int j=0; j<3; j++) {
-          int n = it(j);
-          double x = xcoor(j);
+          n = it(j);
+          x = xcoor(j);
           if (n == 0) {
                   fun1(j) = dp2 * x;
                   fun(j) = 1.0;
@@ -136,19 +139,19 @@ int density_gradient(
                   fun(j) = x2 * x2 * x;
           }
         } // endfor j
-        double f12 = fun(0) * fun(1) * aexp;
-        double f123 = f12 * fun(2);
-        double fa = fun1(0) * fun(1) * fun(2) * aexp;
-        double fb = fun1(1) * fun(0) * fun(2) * aexp;
-        double fc = fun1(2) * f12;
+        f12 = fun(0) * fun(1) * aexp;
+        f123 = f12 * fun(2);
+        fa = fun1(0) * fun(1) * fun(2) * aexp;
+        fb = fun1(1) * fun(0) * fun(2) * aexp;
+        fc = fun1(2) * f12;
 
         // run over orbitals
         for ( int j=0; j<nmo; j++) {
-          double cfj = coef(j,i);
+          cfj = coef(j,i);
           gun(j) = gun(j) + cfj * f123;
-          gun1(j,0) = gun1(j, 0) + cfj * fa;
-          gun1(j,1) = gun1(j, 1) + cfj * fb;
-          gun1(j,2) = gun1(j, 2) + cfj * fc;
+          gun1(j,0) += cfj * fa;
+          gun1(j,1) += cfj * fb;
+          gun1(j,2) += cfj * fc;
         }
 
       } // endfor jj
@@ -157,8 +160,8 @@ int density_gradient(
 
   // Run again over orbitals
   for ( int i=0; i<nmo; i++) {
-    double fac = occ(i);
-    double facgun = fac * gun(i);
+    fac = occ(i);
+    facgun = fac * gun(i);
     for ( int j=0; j<3; j++) {
       grad(j) += facgun * gun1(i,j);
     }

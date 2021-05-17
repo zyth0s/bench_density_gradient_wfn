@@ -55,7 +55,21 @@ Impressions
           experience any of its drawbacks. No dependencies. No extra effort is needed to
           handle arrays. Declaration of variables is archaic. Picked this.
 
-2. **C++** is the second fastest [due to location of declarations?].
+3. **Rust** is 2x slower than Fortran. Suffers with large array sizes. Would need to link to BLAS/LAPACK.
+       It required also some additional work [Fortran < Rust < C++]
+       because multidimensional arrays are not first
+       order citizens. But it is trivial to add ndarray.
+       More verbose for the same reason, also due
+       to forced type conversions. Inference helps anyway.
+       Too, nalgebra library has some very nice things (but <3D).
+       Wish they join together. Might be still a risky alternative!?
+       Provided some pre-training, and having to develop a large library...
+       Even tried another allocator, why not? Saw no effect.
+       Fortran compilers are more widespread and are faster after all.
+       Will stay with Fortran for this reason (I do not want more issues)
+       but it is worth keeping an eye on Rust, definetely.
+
+2. **C++** is a bit worse than Rust [due to location of declarations?].
       Suffers with larger matrix sizes. It is tedious.
       Does C++ have multidimensional dynamic arrays? Yes,
       valarrays (or vectors if you wish but not for numerics).
@@ -69,20 +83,6 @@ Impressions
       done it is like Rust. Well, you cannot use inference (auto)
       with those libraries [messy]. And the compiler is more silent [bug land].
       Would require storing a copy of Eigen (I do not want more 3rd party code here).
-
-3. **Rust** is third. Suffers with large array sizes. Would need to link to BLAS/LAPACK.
-       It required also some additional work [Fortran < Rust < C++]
-       because multidimensional arrays are not first
-       order citizens. But it is trivial to add ndarray.
-       More verbose for the same reason, also due
-       to forced type conversions. Inference helps anyway.
-       Too, nalgebra library has some very nice things (but <3D).
-       Wish they join together. Might be still a risky alternative!?
-       Provided some pre-training, and having to develop a large library...
-       Even tried another allocator, why not? Saw no effect.
-       Fortran compilers are more widespread and are faster after all.
-       Will stay with Fortran for this reason (I do not want more issues)
-       but it is worth keeping an eye on Rust, definetely.
 
 4. **Julia** is a joy. Interactive, expressive, but
         not fast enough [although loable]. That is crucial
