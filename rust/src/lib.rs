@@ -48,6 +48,12 @@ pub extern fn density_gradient(
 
     grad.fill(0.0);
 
+    let mut k: usize;
+    let mut i: usize;
+    let mut itip: usize;
+    let mut it = Array1::<usize>::zeros(3);
+    let mut n: usize; 
+
     for ic in (0 as usize)..(natm as usize) {
         // Atomic coordinates of this center
         xcoor[0] = point[0] - xyz[[ic,0]];
@@ -56,7 +62,7 @@ pub extern fn density_gradient(
         let dis2 = xcoor.mapv(|a| a.powi(2)).sum();
         // Loop over different shells in this atom
         for m in (0 as usize)..(ngroup[ic] as usize) {
-            let k = (nuexp[[ic,m,0]]-1) as usize;
+            k = (nuexp[[ic,m,0]]-1) as usize;
             // Skip to compute this primitive if distance is too big.
             if dis2 > (rcutte[[ic,m]]).powi(2) { continue };
             let ori = -oexp[k];
@@ -66,16 +72,15 @@ pub extern fn density_gradient(
             // Loop over the different primitives in this shell.
             for jj in (0 as usize)..(nzexp[[ic,m]] as usize) {
                 // "i" is the original index of the primitive in the WFN.
-                let i = (nuexp[[ic,m,jj]]-1) as usize;
-                let itip = (ityp[i]-1) as usize;
+                i = (nuexp[[ic,m,jj]]-1) as usize;
+                itip = (ityp[i]-1) as usize;
                 // Integer coeficients
-                let mut it = Array1::<usize>::zeros(3);
                 it[0] = nlm[[itip,0]] as usize;
                 it[1] = nlm[[itip,1]] as usize;
                 it[2] = nlm[[itip,2]] as usize;
 
                 for j in (0 as usize)..(3 as usize) {
-                    let n = it[j] as usize;
+                    n = it[j] as usize;
                     let x = xcoor[j];
                     if n == 0 {
                         fun1[j] = dp2 * x;
