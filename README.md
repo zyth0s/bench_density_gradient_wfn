@@ -7,24 +7,56 @@ Requires a private package.
 
 
 ```
-Calculating the density gradient of CH₄ at a point x10 [cpp]:
-  61.601 μs (102 allocations: 1.78 KiB)
+Calculating the density gradient of CH₄ at a point (x10) [f]:
+  17.677 μs (2 allocations: 224 bytes)
 
-Calculating the density gradient of CH₄ at a point x10 [f]:
-  73.489 μs (202 allocations: 3.34 KiB)
+Calculating the density gradient of CH₄ at a point (x10) [cpp]:
+  19.745 μs (2 allocations: 224 bytes)
 
-Calculating the density gradient of CH₄ at a point x10 [rs]:
-  75.102 μs (102 allocations: 1.78 KiB)
+Calculating the density gradient of CH₄ at a point (x10) [rs]:
+  31.248 μs (2 allocations: 224 bytes)
 
-Calculating the density gradient of CH₄ at a point x10 [jl]:
-  215.357 μs (6159 allocations: 113.61 KiB)
+Calculating the density gradient of CH₄ at a point (x10) [jl]:
+  64.193 μs (862 allocations: 95.38 KiB)
+
+
+Calculating the density gradient of C₂H₄ at a point (x10) [f]:
+  26.512 μs (2 allocations: 224 bytes)
+
+Calculating the density gradient of C₂H₄ at a point (x10) [cpp]:
+  45.543 μs (2 allocations: 224 bytes)
+
+Calculating the density gradient of C₂H₄ at a point (x10) [rs]:
+  79.007 μs (2 allocations: 224 bytes)
+
+Calculating the density gradient of C₂H₄ at a point (x10) [jl]:
+  141.856 μs (1662 allocations: 183.66 KiB)
+
+
+Calculating the density gradient of imidazol at a point (x10) [f]:
+  66.627 μs (2 allocations: 224 bytes)
+
+Calculating the density gradient of imidazol at a point (x10) [cpp]:
+  123.802 μs (2 allocations: 224 bytes)
+
+Calculating the density gradient of imidazol at a point (x10) [rs]:
+  184.032 μs (2 allocations: 224 bytes)
+
+Calculating the density gradient of imidazol at a point (x10) [jl]:
+  315.007 μs (2872 allocations: 319.44 KiB)
+
 ```
 
 
-Feelings
-========
+Impressions
+===========
 
-* **C++** is the fastest [small margin] but also more tedious.
+1. **Fortran** is the fastest. Perfect for this task. The routine is simple enough to not
+          experience any of its drawbacks. No dependencies. No extra effort is needed to
+          handle arrays. Declaration of variables is archaic. Picked this.
+
+2. **C++** is the second fastest [due to location of declarations?].
+      Suffers with larger matrix sizes. It is tedious.
       Does C++ have multidimensional dynamic arrays? Yes,
       valarrays (or vectors if you wish but not for numerics).
       The former are poorly documented and have terrible slicing.
@@ -36,26 +68,31 @@ Feelings
       set up the includes, adapt the build script. Buff... fine. Once it is
       done it is like Rust. Well, you cannot use inference (auto)
       with those libraries [messy]. And the compiler is more silent [bug land].
-      Would require storing a copy of Eigen (I do not like adding 3rd party code).
+      Would require storing a copy of Eigen (I do not want more 3rd party code here).
 
-* **Fortran** is fast. Perfect for this task. The routine is simple enough to not
-          experience any of its drawbacks. No dependencies. Best choice.
-
-* **Rust** is equally fast. It requires a bit more of work [Fortran < Rust < C++]
+3. **Rust** is third. Suffers with large array sizes. Would need to link to BLAS/LAPACK.
+       It required also some additional work [Fortran < Rust < C++]
        because multidimensional arrays are not first
        order citizens. But it is trivial to add ndarray.
        More verbose for the same reason, also due
        to forced type conversions. Inference helps anyway.
-       FWIW, nalgebra library has some very nice things (but <3D).
-       Wish they join together. Rust might be still a risky alternative!?
+       Too, nalgebra library has some very nice things (but <3D).
+       Wish they join together. Might be still a risky alternative!?
        Provided some pre-training, and having to develop a large library...
        Even tried another allocator, why not? Saw no effect.
-       Fortran compilers are more widespread and faster after all.
-       Will stay with Fortran for this reason (no more issues)
+       Fortran compilers are more widespread and are faster after all.
+       Will stay with Fortran for this reason (I do not want more issues)
        but it is worth keeping an eye on Rust, definetely.
 
-
-* **Julia** is a joy. Interactive, expressive, but
-        slightly slower (2-3x) [loable]. That is crucial
+4. **Julia** is a joy. Interactive, expressive, but
+        not fast enough [although loable]. That is crucial
         for this routine. Looking for ways to speed it up.
-        If speed equals... this stays.
+        If speed equals this stays.
+
+
+TODO: declare variables at the beginning in all implementations
+      to see if they catch up with Fortran.
+TODO: try with a large system
+TODO: link to LAPACK with ndalgebra-linalg in Rust library.
+TODO: link to LAPACK in the Fortran library.
+

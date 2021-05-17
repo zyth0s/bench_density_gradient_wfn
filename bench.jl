@@ -96,13 +96,15 @@ function density_gradient_fortran(wfn; nsamples=10)
 end
 
 # Pure Julia
-function density_gradient_julia(wfn)
+function density_gradient_julia(wfn; nsamples=10)
 
    point = ones(3)
    ngtoH = size(wfn.nuexp, 3)
    ∇ρ = zeros(3)
 
-   ChemInt.jl_density_gradient!(∇ρ, point, wfn, 0)
+   for i in 1:nsamples
+      ChemInt.jl_density_gradient!(∇ρ, point, wfn, 0)
+   end
    nothing
 end
 
@@ -122,11 +124,31 @@ cd("..")
 using ChemInt
 using BenchmarkTools
 
-function bench_library(lang=:f)
+@doc """
+    bench_library(lang=:f)
 
-   wfn = parse_wavefunction(joinpath(@__DIR__, "ch4.wfn"))
+Benchmark C++ (:cpp), Rust (:rs), Fortran(:f), or Julia (:jl)
+"""
+function bench_library(lang=:f,system=:ch4)
+
+   wfn = if system == :ch4
+            parse_wavefunction(joinpath(@__DIR__, "ch4.wfn"))
+         elseif system == :c2h4
+            parse_wavefunction(joinpath(@__DIR__, "c2h4.wfn"))
+         elseif system == :imidazol
+            parse_wavefunction(joinpath(@__DIR__, "imidazol.wfn"))
+         end
+
+   formula = if system == :ch4
+            "CH₄"
+         elseif system == :c2h4
+            "C₂H₄"
+         elseif system == :imidazol
+            "imidazol"
+         end
+
    println()
-   println("Calculating the density gradient of CH₄ at a point x10 [$(string(lang))]:")
+   println("Calculating the density gradient of $formula at a point (x10) [$(string(lang))]:")
    if lang == :cpp
       return @btime density_gradient_cpp($wfn)
    elseif lang == :rs
@@ -135,11 +157,15 @@ function bench_library(lang=:f)
       return @btime density_gradient_fortran($wfn)
    elseif lang == :jl
       return @btime density_gradient_julia($wfn)
+   else
+      @warn "lang must be one of :cpp, :rs, :f, or :jl"
    end
 end
 
-bench_library(:cpp)
-bench_library(:f)
-bench_library(:rs)
-bench_library(:jl)
+for system in [:ch4, :c2h4, :imidazol]
+   for lang in [:f,:cpp,:rs,:jl]
+      bench_library(lang, system)
+   end
+   println()
+end
 
