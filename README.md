@@ -92,7 +92,10 @@ Impressions
 
 TODO: declare variables at the beginning in all implementations
       to see if they catch up with Fortran.
+
 TODO: try with a large system
+
 TODO: link to LAPACK with ndalgebra-linalg in Rust library.
+
 TODO: link to LAPACK in the Fortran library.
 
