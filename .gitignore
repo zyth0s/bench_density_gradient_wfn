@@ -20,6 +20,10 @@
 *.mod
 *.smod
 
+# Rust generated files
+rust/target
+rust/Cargo.lock
+
 # Compiled Static libraries
 *.lai
 *.la
@@ -30,3 +34,4 @@
 *.exe
 *.out
 *.app
+test
