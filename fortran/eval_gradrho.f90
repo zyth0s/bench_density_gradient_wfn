@@ -20,31 +20,27 @@ contains
                               xyz,    &
                               rcutte, &
                               coef,   &
-                              !rho,    &
                               grad_rho) &
                               bind(C, name='density_gradient')
 
-     use iso_c_binding ! C-compatible types
+     use, intrinsic :: iso_c_binding, only: c_long, c_double
      implicit none
      ! input variables:
-     real(c_double),  dimension(3),                  intent(in) :: point
-     integer(c_long),                                intent(in) :: nmo, natm, nprims, mgrp, ngtoH
-     integer(c_long), dimension(natm),               intent(in) :: ngroup
-     integer(c_long), dimension(nprims),             intent(in) :: ityp
-     integer(c_long), dimension(natm,mgrp),          intent(in) :: nzexp
-     integer(c_long), dimension(56,3),               intent(in) :: nlm ! magic number
-     integer(c_long), dimension(natm,mgrp,ngtoH),    intent(in) :: nuexp
-     real(c_double),  dimension(nmo),                intent(in) :: occ
-     real(c_double),  dimension(nprims),             intent(in) :: oexp
-     real(c_double),  dimension(natm,3),             intent(in) :: xyz
-     real(c_double),  dimension(natm,mgrp),          intent(in) :: rcutte
-     real(c_double),  dimension(2*nmo,nprims),       intent(in) :: coef
-     
+     real(c_double),  dimension(3),               intent(in) :: point
+     integer(c_long),                             intent(in) :: nmo, natm, nprims, mgrp, ngtoH
+     integer(c_long), dimension(natm),            intent(in) :: ngroup
+     integer(c_long), dimension(nprims),          intent(in) :: ityp
+     integer(c_long), dimension(natm,mgrp),       intent(in) :: nzexp
+     integer(c_long), dimension(56,3),            intent(in) :: nlm ! magic number
+     integer(c_long), dimension(natm,mgrp,ngtoH), intent(in) :: nuexp
+     real(c_double),  dimension(nmo),             intent(in) :: occ
+     real(c_double),  dimension(nprims),          intent(in) :: oexp
+     real(c_double),  dimension(natm,3),          intent(in) :: xyz
+     real(c_double),  dimension(natm,mgrp),       intent(in) :: rcutte
+     real(c_double),  dimension(2*nmo,nprims),    intent(in) :: coef
      ! output variables:
-     !real(c_double),                              intent(inout) :: rho
      real(c_double),  dimension(3),               intent(inout) :: grad_rho
-
-     ! local variables: TODO preallocate arrays
+     ! local variables:
      integer(c_long)                   :: n, j, k, jj, i, itip, ic, m
      integer(c_long), dimension(3)     :: it
      real(c_double)                    :: ori, aexp, dp2, x, dis2, f12, f123, fa, fb, fc, fac, facgun, x2, cfj
@@ -52,8 +48,6 @@ contains
      real(c_double),  dimension(nmo)   :: gun
      real(c_double),  dimension(nmo,3) :: gun1
 
-     !rho         = 0.0
-     !grad_rhomod = 0.0
      grad_rho(:) = 0.0
      fun(:)      = 0.0
      fun1(:)     = 0.0
@@ -130,7 +124,6 @@ contains
      do i = 1,nmo
         fac = occ(i)
         facgun = fac * gun(i)
-        !rho = rho + facgun * gun(i)
         do j = 1,3
            grad_rho(j) = grad_rho(j) + facgun * gun1(i,j)
         enddo
