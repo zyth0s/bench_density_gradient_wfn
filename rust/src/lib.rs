@@ -45,30 +45,42 @@ pub extern fn density_gradient(
     let mut xcoor = Array1::<f64>::zeros(3);
     let mut gun   = Array1::<f64>::zeros(nmo as usize);
     let mut gun1  = Array2::<f64>::zeros((nmo as usize, 3).f());
-
+    let mut it    = Array1::<usize>::zeros(3);
+    let mut k      : usize;
+    let mut i      : usize;
+    let mut itip   : usize;
+    let mut n      : usize;
+    let mut dis2   : f64;
+    let mut ori    : f64;
+    let mut dp2    : f64;
+    let mut aexp   : f64;
+    let mut x      : f64;
+    let mut f12    : f64;
+    let mut f123   : f64;
+    let mut fa     : f64;
+    let mut fb     : f64;
+    let mut fc     : f64;
+    let mut cfj    : f64;
+    let mut fac    : f64;
+    let mut facgun : f64;
+    // output
     grad.fill(0.0);
-
-    let mut k: usize;
-    let mut i: usize;
-    let mut itip: usize;
-    let mut it = Array1::<usize>::zeros(3);
-    let mut n: usize; 
 
     for ic in (0 as usize)..(natm as usize) {
         // Atomic coordinates of this center
         xcoor[0] = point[0] - xyz[[ic,0]];
         xcoor[1] = point[1] - xyz[[ic,1]];
         xcoor[2] = point[2] - xyz[[ic,2]];
-        let dis2 = xcoor.mapv(|a| a.powi(2)).sum();
+        dis2 = xcoor.mapv(|a| a.powi(2)).sum();
         // Loop over different shells in this atom
         for m in (0 as usize)..(ngroup[ic] as usize) {
             k = (nuexp[[ic,m,0]]-1) as usize;
             // Skip to compute this primitive if distance is too big.
             if dis2 > (rcutte[[ic,m]]).powi(2) { continue };
-            let ori = -oexp[k];
-            let dp2 = 2.0*ori;
+            ori = -oexp[k];
+            dp2 = 2.0*ori;
             // All primitives in a shell share the same exponent.
-            let aexp = (ori*dis2).exp();
+            aexp = (ori*dis2).exp();
             // Loop over the different primitives in this shell.
             for jj in (0 as usize)..(nzexp[[ic,m]] as usize) {
                 // "i" is the original index of the primitive in the WFN.
@@ -81,7 +93,7 @@ pub extern fn density_gradient(
 
                 for j in (0 as usize)..(3 as usize) {
                     n = it[j] as usize;
-                    let x = xcoor[j];
+                    x = xcoor[j];
                     if n == 0 {
                         fun1[j] = dp2 * x;
                         fun[j] = 1.0;
@@ -106,15 +118,15 @@ pub extern fn density_gradient(
                         fun[j] = x2 * x2 * x;
                     }
                 }
-                let f12 = fun[0] * fun[1] * aexp;
-                let f123 = f12 * fun[2];
-                let fa = fun1[0] * fun[1] * fun[2] * aexp;
-                let fb = fun1[1] * fun[0] * fun[2] * aexp;
-                let fc = fun1[2] * f12;
+                f12 = fun[0] * fun[1] * aexp;
+                f123 = f12 * fun[2];
+                fa = fun1[0] * fun[1] * fun[2] * aexp;
+                fb = fun1[1] * fun[0] * fun[2] * aexp;
+                fc = fun1[2] * f12;
 
                 // Run over orbitals
                 for j in (0 as usize)..(nmo as usize) {
-                    let cfj = coef[[j,i]];
+                    cfj = coef[[j,i]];
                     gun[j] += cfj * f123;
                     gun1[[j,0]] += cfj * fa;
                     gun1[[j,1]] += cfj * fb;
@@ -125,8 +137,8 @@ pub extern fn density_gradient(
     }
     // Run again over orbitals
     for i in (0 as usize)..(nmo as usize) {
-        let fac = occ[i];
-        let facgun = fac * gun[i];
+        fac = occ[i];
+        facgun = fac * gun[i];
         for j in (0 as usize)..(3 as usize) {
             grad[j] += facgun * gun1[[i,j]];
         }
