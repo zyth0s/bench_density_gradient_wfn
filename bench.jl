@@ -121,8 +121,41 @@ run(`make`)
 cd("..")
 
 
-using ChemInt
+struct AIMWFN_Mol_Gamess_HF
+   nmo::Int64
+   nocc::Int64
+   nprims::Int64
+   natm::Int64
+   atnam::Vector{String}
+   coords::Matrix{Float64}
+   charges::Vector{Float64}
+   icen::Vector{Int64}
+   ityp::Vector{Int64}
+   oexp::Vector{Float64}
+   occ::Vector{Float64}
+   eorb::Vector{Float64}
+   coef::Matrix{Float64}
+   tote::Float64
+   virial::Float64
+   npc::Vector{Int64}
+   icenat::Matrix{Int64}
+   nlm::Matrix{Int64}
+   ngroup::Vector{Int64}
+   nzexp::Matrix{Int64}
+   nuexp::Array{Int64,3}
+   npcant::Int64
+   maxgrp::Int64
+   numshells::Int64
+   cuttz::Float64
+   rcutte::Matrix{Float64}
+   chkfile::String
+end
+
+
+
+using Serialization
 using BenchmarkTools
+#using ChemInt
 
 @doc """
     bench_library(lang=:f)
@@ -131,12 +164,11 @@ Benchmark C++ (:cpp), Rust (:rs), Fortran(:f), or Julia (:jl)
 """
 function bench_library(lang=:f,system=:ch4)
 
-   wfn = if system == :ch4
-            parse_wavefunction(joinpath(@__DIR__, "ch4.wfn"))
-         elseif system == :c2h4
-            parse_wavefunction(joinpath(@__DIR__, "c2h4.wfn"))
-         elseif system == :imidazol
-            parse_wavefunction(joinpath(@__DIR__, "imidazol.wfn"))
+   wfnpath = joinpath(@__DIR__, "$(string(system)).wfn")
+   wfn = if :ChemInt in names(Main, imported = true)
+            parse_wavefunction(wfnpath)
+         else
+            deserialize(wfnpath * ".ser")
          end
 
    formula = if system == :ch4
@@ -156,7 +188,11 @@ function bench_library(lang=:f,system=:ch4)
    elseif lang == :f
       return @btime density_gradient_fortran($wfn)
    elseif lang == :jl
-      return @btime density_gradient_julia($wfn)
+      if :ChemInt in names(Main, imported = true)
+         return @btime density_gradient_julia($wfn)
+      else
+         println("  ChemInt not present: skipping Julia benchmark")
+      end
    else
       @warn "lang must be one of :cpp, :rs, :f, or :jl"
    end
