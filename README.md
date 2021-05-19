@@ -53,7 +53,7 @@ Impressions
    No dependencies. No extra effort is needed to handle arrays. Compiles in the
    blink of an eye. Declaration of variables is archaic. Picked this.
 
-3. **Rust** is 2x slower than Fortran. Suffers with large array sizes. Would need to link to BLAS/LAPACK.
+3. **Rust** is 2x slower than Fortran. Suffers with large array sizes.
    It required also some additional work [Fortran < Rust < C++]
    because multidimensional arrays are not first
    order citizens. But it is trivial to add ndarray.
@@ -89,14 +89,9 @@ Impressions
     If speed equals this stays.
 
 
-INIT: declare variables at the beginning in all implementations
+DONE: declare variables at the beginning in all implementations
       to see if they catch up with Fortran.
       Already made Rust faster than C++. Differences between 
       compiled languages should be due to implementation differences.
 
 TODO: try with a large system
-
-TODO: link to LAPACK with ndalgebra-linalg in Rust library.
-
-TODO: link to LAPACK in the Fortran library.
-
