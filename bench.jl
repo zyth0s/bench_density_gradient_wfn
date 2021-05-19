@@ -6,9 +6,6 @@ find_grad_fn(path_basename,extension) = dlsym(
                dlopen(joinpath(@__DIR__,
                       "$path_basename.$extension")),
                :density_gradient)
-const RUST_gradient    = find_grad_fn("rust/target/release/libexp_chemint_rust", dlext)
-const CPP_gradient     = find_grad_fn("cpp/lib", "so")
-const FORTRAN_gradient = find_grad_fn("fortran/libeval_gradrho", "so")
 
 function density_gradient_rust(wfn; nsamples=10)
 
@@ -122,35 +119,38 @@ cd("../rust")
 run(`make`)
 cd("..")
 
+const RUST_gradient    = find_grad_fn("rust/target/release/libexp_chemint_rust", dlext)
+const CPP_gradient     = find_grad_fn("cpp/lib", "so")
+const FORTRAN_gradient = find_grad_fn("fortran/libeval_gradrho", "so")
 
 struct AIMWFN_Mol_Gamess_HF
-   nmo::Int64
-   nocc::Int64
-   nprims::Int64
-   natm::Int64
-   atnam::Vector{String}
-   coords::Matrix{Float64}
-   charges::Vector{Float64}
-   icen::Vector{Int64}
-   ityp::Vector{Int64}
-   oexp::Vector{Float64}
-   occ::Vector{Float64}
-   eorb::Vector{Float64}
-   coef::Matrix{Float64}
-   tote::Float64
-   virial::Float64
-   npc::Vector{Int64}
-   icenat::Matrix{Int64}
-   nlm::Matrix{Int64}
-   ngroup::Vector{Int64}
-   nzexp::Matrix{Int64}
-   nuexp::Array{Int64,3}
-   npcant::Int64
-   maxgrp::Int64
-   numshells::Int64
-   cuttz::Float64
-   rcutte::Matrix{Float64}
-   chkfile::String
+   nmo       :: Int64
+   nocc      :: Int64
+   nprims    :: Int64
+   natm      :: Int64
+   atnam     :: Vector{String}
+   coords    :: Matrix{Float64}
+   charges   :: Vector{Float64}
+   icen      :: Vector{Int64}
+   ityp      :: Vector{Int64}
+   oexp      :: Vector{Float64}
+   occ       :: Vector{Float64}
+   eorb      :: Vector{Float64}
+   coef      :: Matrix{Float64}
+   tote      :: Float64
+   virial    :: Float64
+   npc       :: Vector{Int64}
+   icenat    :: Matrix{Int64}
+   nlm       :: Matrix{Int64}
+   ngroup    :: Vector{Int64}
+   nzexp     :: Matrix{Int64}
+   nuexp     :: Array{Int64,3}
+   npcant    :: Int64
+   maxgrp    :: Int64
+   numshells :: Int64
+   cuttz     :: Float64
+   rcutte    :: Matrix{Float64}
+   chkfile   :: String
 end
 
 
