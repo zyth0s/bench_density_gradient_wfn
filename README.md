@@ -93,5 +93,3 @@ DONE: declare variables at the beginning in all implementations
       to see if they catch up with Fortran.
       Already made Rust faster than C++. Differences between 
       compiled languages should be due to implementation differences.
-
-TODO: try with a large system
