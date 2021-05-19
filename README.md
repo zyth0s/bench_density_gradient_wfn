@@ -3,9 +3,6 @@
 Analysis of the performance of evaluating the density gradient
 employing various language implementations (C++/Fortran/Rust/Julia)
 
-Requires a private package.
-
-
 ```
 Calculating the density gradient of CH₄ at a point (x10) [f]:
   17.897 μs (2 allocations: 224 bytes)
@@ -17,7 +14,7 @@ Calculating the density gradient of CH₄ at a point (x10) [cpp]:
   19.656 μs (2 allocations: 224 bytes)
 
 Calculating the density gradient of CH₄ at a point (x10) [jl]:
-  65.251 μs (862 allocations: 95.38 KiB)
+  54.734 μs (862 allocations: 95.38 KiB)
 
 
 Calculating the density gradient of C₂H₄ at a point (x10) [f]:
@@ -30,7 +27,7 @@ Calculating the density gradient of C₂H₄ at a point (x10) [cpp]:
   45.770 μs (2 allocations: 224 bytes)
 
 Calculating the density gradient of C₂H₄ at a point (x10) [jl]:
-  144.770 μs (1662 allocations: 183.66 KiB)
+  117.139 μs (1662 allocations: 183.66 KiB)
 
 
 Calculating the density gradient of imidazol at a point (x10) [f]:
@@ -43,7 +40,7 @@ Calculating the density gradient of imidazol at a point (x10) [cpp]:
   123.619 μs (2 allocations: 224 bytes)
 
 Calculating the density gradient of imidazol at a point (x10) [jl]:
-  313.479 μs (2872 allocations: 319.44 KiB)
+  240.226 μs (2872 allocations: 319.44 KiB)
 
 ```
 
