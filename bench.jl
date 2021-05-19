@@ -1,9 +1,14 @@
 
 # Benchmark
 
-const RUSTLIB = joinpath(@__DIR__, "rust/target/release/libexp_chemint_rust.dylib")
-const CPPLIB = joinpath(@__DIR__, "cpp/lib.so")
-const FORTRANLIB = joinpath(@__DIR__, "fortran/libeval_gradrho.so")
+using Libdl: dlopen, dlsym, dlext
+find_grad_fn(path_basename,extension) = dlsym(
+               dlopen(joinpath(@__DIR__,
+                      "$path_basename.$extension")),
+               :density_gradient)
+const RUST_gradient    = find_grad_fn("rust/target/release/libexp_chemint_rust", dlext)
+const CPP_gradient     = find_grad_fn("cpp/lib", "so")
+const FORTRAN_gradient = find_grad_fn("fortran/libeval_gradrho", "so")
 
 function density_gradient_rust(wfn; nsamples=10)
 
@@ -12,7 +17,7 @@ function density_gradient_rust(wfn; nsamples=10)
    ∇ρ = zeros(3)
 
    for i in 1:nsamples
-      @ccall RUSTLIB.density_gradient(
+      @ccall $RUST_gradient(
                  point      :: Ptr{Cdouble},
                  wfn.nmo    :: Clong,
                  wfn.natm   :: Clong,
@@ -29,7 +34,6 @@ function density_gradient_rust(wfn; nsamples=10)
                  wfn.coords :: Ptr{Cdouble},
                  wfn.rcutte :: Ptr{Cdouble},
                  wfn.coef   :: Ptr{Cdouble},
-                 #ρ          :: Ref{Cdouble}, # inout
                  ∇ρ         :: Ptr{Cdouble}, # inout
              )::Cvoid
    end
@@ -42,7 +46,7 @@ function density_gradient_cpp(wfn; nsamples=10)
    ∇ρ = zeros(3)
 
    for i in 1:nsamples
-      @ccall CPPLIB.density_gradient(
+      @ccall $CPP_gradient(
                  point      :: Ptr{Cdouble},
                  wfn.nmo    :: Clong,
                  wfn.natm   :: Clong,
@@ -59,7 +63,6 @@ function density_gradient_cpp(wfn; nsamples=10)
                  wfn.coords :: Ptr{Cdouble},
                  wfn.rcutte :: Ptr{Cdouble},
                  wfn.coef   :: Ptr{Cdouble},
-                 #ρ          :: Ref{Cdouble}, # inout
                  ∇ρ         :: Ptr{Cdouble}, # inout
              )::Cvoid
    end
@@ -72,7 +75,7 @@ function density_gradient_fortran(wfn; nsamples=10)
    ∇ρ = zeros(3)
 
    for i in 1:nsamples
-      @ccall FORTRANLIB.density_gradient(
+      @ccall $FORTRAN_gradient(
                  point      :: Ptr{Cdouble},
                  wfn.nmo    :: Ref{Clong},
                  wfn.natm   :: Ref{Clong},
@@ -89,7 +92,6 @@ function density_gradient_fortran(wfn; nsamples=10)
                  wfn.coords :: Ptr{Cdouble},
                  wfn.rcutte :: Ptr{Cdouble},
                  wfn.coef   :: Ptr{Cdouble},
-                 #ρ          :: Ref{Cdouble}, # inout
                  ∇ρ         :: Ptr{Cdouble}, # inout
              )::Cvoid
    end
