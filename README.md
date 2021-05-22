@@ -97,10 +97,11 @@ Impressions
     Scales better than Rust & C++. There is still a (small but crucial) difference with Fortran.
     If speed equals this stays.
     Optimization steps:
-    1. Predeclare variables to avoid type instability accessing struct elements.
-    2. Flags(same as for others): `-O3 -C skylake --check-bounds=no`
-    3. Avoid array copies with `@views`.
-    4. Guarantee `@inbounds` access.
+    1. StaticArrays.
+    2. Predeclare variables to avoid type instability accessing struct elements.
+    3. Flags(same as for others): `-O3 -C skylake --check-bounds=no`
+    4. Avoid array copies with `@views`.
+    5. Guarantee `@inbounds` access.
 
 
 DONE: declare variables at the beginning in all implementations

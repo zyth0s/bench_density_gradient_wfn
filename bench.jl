@@ -1,6 +1,7 @@
 
 # Benchmark
 
+using StaticArrays
 using Libdl: dlopen, dlsym, dlext
 find_grad_fn(path_basename,extension) = dlsym(
                dlopen(joinpath(@__DIR__,
@@ -102,7 +103,7 @@ function density_gradient_julia(wfn; nsamples=10)
    ∇ρ = zeros(3)
 
    for i in 1:nsamples
-      ChemInt.jl_density_gradient!(∇ρ, point, wfn, 0)
+      density_gradient!(∇ρ, point, wfn)
    end
    nothing
 end
@@ -152,6 +153,7 @@ struct AIMWFN_Mol_Gamess_HF
    rcutte    :: Matrix{Float64}
    chkfile   :: String
 end
+include("julia/eval_gradrho.jl")
 
 
 
