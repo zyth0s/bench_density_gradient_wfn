@@ -91,7 +91,7 @@ Impressions
     code in my repository).
     Optimization steps:
     1. Predeclare variables.
-    2. Flags(same as for others): `-O3 -march=native -fPIC`
+    2. Flags(same as for others): `-O3 -march=native -fPIC -funroll-loops`
 
 4. **Julia** is a joy. Interactive, expressive, and quite fast with some modifications.
     Scales better than Rust & C++. There is still a (small but crucial) difference with Fortran.
