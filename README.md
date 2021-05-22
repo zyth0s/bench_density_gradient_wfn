@@ -53,8 +53,8 @@ Impressions
    No dependencies. No extra effort is needed to handle arrays. Compiles in the
    blink of an eye. Declaration of variables is archaic. Picked this.
    Optimization steps:
-   1. Predeclaration of variables (forced to do so).
-   2. Flags(same as for others): -fPIC -O3 -march=native -funroll-loops
+   1. Predeclare variables (forced to do so).
+   2. Flags(same as for others): `-fPIC -O3 -march=native -funroll-loops`
 
 3. **Rust** is 2x slower than Fortran. Suffers with large array sizes.
    It required also some additional work [Fortran < Rust < C++]
@@ -70,9 +70,9 @@ Impressions
    Will stay with Fortran for this reason (I do not want more issues)
    but it is worth keeping an eye on Rust, definetely.
    Optimization steps:
-   1. Predeclaration of variables.
-   2. Flags: RUSTFLAGS="-C target-cpu=native" cargo b --release
-      Release: LTO, codegen, panic
+   1. Predeclare variables.
+   2. Flags: `RUSTFLAGS="-C target-cpu=native" cargo b --release`.
+      Release: full LTO, 1 codegen unit, and abort on panic.
 
 2. **C++** is a bit worse than Rust.
     Also suffers with larger matrix sizes. It is tedious.
@@ -90,17 +90,17 @@ Impressions
     Would require storing a copy of Eigen (I do not want more 3rd party
     code in my repository).
     Optimization steps:
-    1. Predeclaration of variables.
-    2. Flags(same as for others): -O3 -march=native -fPIC
+    1. Predeclare variables.
+    2. Flags(same as for others): `-O3 -march=native -fPIC`
 
 4. **Julia** is a joy. Interactive, expressive, and quite fast with some modifications.
-    Scales better than Rust & C++. There is still a (tiny -> crucial) difference with Fortran.
+    Scales better than Rust & C++. There is still a (small but crucial) difference with Fortran.
     If speed equals this stays.
     Optimization steps:
-    1. Predeclaration of variables to avoid type instability accessing struct elements.
-    2. Flags(same as for others): -O3 -C skylake --check-bounds=no
-    3. Avoid array copies with @views.
-    4. Guarantee @inbounds access.
+    1. Predeclare variables to avoid type instability accessing struct elements.
+    2. Flags(same as for others): `-O3 -C skylake --check-bounds=no`
+    3. Avoid array copies with `@views`.
+    4. Guarantee `@inbounds` access.
 
 
 DONE: declare variables at the beginning in all implementations
