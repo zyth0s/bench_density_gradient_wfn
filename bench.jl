@@ -192,11 +192,7 @@ function bench_library(lang=:f,system=:ch4)
    elseif lang == :f
       return @btime density_gradient_fortran($wfn)
    elseif lang == :jl
-      if :ChemInt in names(Main, imported = true)
-         return @btime density_gradient_julia($wfn)
-      else
-         println("  ChemInt not present: skipping Julia benchmark")
-      end
+      return @btime density_gradient_julia($wfn)
    else
       @warn "lang must be one of :cpp, :rs, :f, or :jl"
    end
