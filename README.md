@@ -14,7 +14,7 @@ Calculating the density gradient of CH₄ at a point (x10) [cpp]:
   19.656 μs (2 allocations: 224 bytes)
 
 Calculating the density gradient of CH₄ at a point (x10) [jl]:
-  26.988 μs (122 allocations: 14.44 KiB)
+  20.021 μs (122 allocations: 14.44 KiB)
 
 
 Calculating the density gradient of C₂H₄ at a point (x10) [f]:
@@ -27,7 +27,7 @@ Calculating the density gradient of C₂H₄ at a point (x10) [cpp]:
   45.770 μs (2 allocations: 224 bytes)
 
 Calculating the density gradient of C₂H₄ at a point (x10) [jl]:
-  61.065 μs (142 allocations: 17.41 KiB)
+  41.737 μs (142 allocations: 17.41 KiB)
 
 
 Calculating the density gradient of imidazol at a point (x10) [f]:
@@ -40,7 +40,7 @@ Calculating the density gradient of imidazol at a point (x10) [cpp]:
   123.619 μs (2 allocations: 224 bytes)
 
 Calculating the density gradient of imidazol at a point (x10) [jl]:
-  167.094 μs (202 allocations: 27.41 KiB)
+  112.843 μs (202 allocations: 27.41 KiB)
 
 ```
 
@@ -52,6 +52,9 @@ Impressions
    enough to not experience any of its drawbacks. Good for numerical kernels.
    No dependencies. No extra effort is needed to handle arrays. Compiles in the
    blink of an eye. Declaration of variables is archaic. Picked this.
+   Optimization steps:
+   1. Predeclaration of variables (forced to do so).
+   2. Flags(same as for others): -fPIC -O3 -march=native -funroll-loops
 
 3. **Rust** is 2x slower than Fortran. Suffers with large array sizes.
    It required also some additional work [Fortran < Rust < C++]
@@ -66,6 +69,10 @@ Impressions
    Fortran compilers are more widespread and are faster after all.
    Will stay with Fortran for this reason (I do not want more issues)
    but it is worth keeping an eye on Rust, definetely.
+   Optimization steps:
+   1. Predeclaration of variables.
+   2. Flags: RUSTFLAGS="-C target-cpu=native" cargo b --release
+      Release: LTO, codegen, panic
 
 2. **C++** is a bit worse than Rust.
     Also suffers with larger matrix sizes. It is tedious.
@@ -82,11 +89,18 @@ Impressions
     with those libraries [messy]. And the compiler is more silent [bug land].
     Would require storing a copy of Eigen (I do not want more 3rd party
     code in my repository).
+    Optimization steps:
+    1. Predeclaration of variables.
+    2. Flags(same as for others): -O3 -march=native -fPIC
 
-4. **Julia** is a joy. Interactive, expressive, but
-    not fast enough [although loable]. That is crucial
-    for this routine. Looking for ways to speed it up.
+4. **Julia** is a joy. Interactive, expressive, and quite fast with some modifications.
+    Scales better than Rust & C++. There is still a (tiny -> crucial) difference with Fortran.
     If speed equals this stays.
+    Optimization steps:
+    1. Predeclaration of variables to avoid type instability accessing struct elements.
+    2. Flags(same as for others): -O3 -C skylake --check-bounds=no
+    3. Avoid array copies with @views.
+    4. Guarantee @inbounds access.
 
 
 DONE: declare variables at the beginning in all implementations
