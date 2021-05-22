@@ -107,3 +107,28 @@ DONE: declare variables at the beginning in all implementations
       to see if they catch up with Fortran.
       Already made Rust faster than C++. Differences between 
       compiled languages should be due to implementation differences.
+
+Compilers:
+```
+GNU Fortran (Homebrew GCC 10.2.0) 10.2.0
+
+rustc 1.52.1 (9bc8c42bb 2021-05-09)
+
+g++
+Apple clang version 11.0.3 (clang-1103.0.32.62)
+Target: x86_64-apple-darwin19.4.0
+Thread model: posix
+
+
+Julia Version 1.6.0
+Commit f9720dc2eb (2021-03-24 12:55 UTC)
+Platform Info:
+  OS: macOS (x86_64-apple-darwin19.6.0)
+  CPU: Intel(R) Core(TM) i5-7360U CPU @ 2.30GHz
+  WORD_SIZE: 64
+  LIBM: libopenlibm
+  LLVM: libLLVM-11.0.1 (ORCJIT, skylake)
+Environment:
+  JULIA_NUM_THREADS = 1
+
+```
