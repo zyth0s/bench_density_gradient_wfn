@@ -8,7 +8,6 @@ Calculating the density gradient of CH₄ at a point (x10) [f]:
   17.897 μs (2 allocations: 224 bytes)
 
 Calculating the density gradient of CH₄ at a point (x10) [rs]:
-  18.343 μs (2 allocations: 224 bytes)
   17.283 μs (2 allocations: 224 bytes)
 
 Calculating the density gradient of CH₄ at a point (x10) [cpp]:
@@ -22,7 +21,6 @@ Calculating the density gradient of C₂H₄ at a point (x10) [f]:
   26.353 μs (2 allocations: 224 bytes)
 
 Calculating the density gradient of C₂H₄ at a point (x10) [rs]:
-  41.708 μs (2 allocations: 224 bytes)
   39.857 μs (2 allocations: 224 bytes)
 
 Calculating the density gradient of C₂H₄ at a point (x10) [cpp]:
@@ -36,7 +34,6 @@ Calculating the density gradient of imidazol at a point (x10) [f]:
   66.975 μs (2 allocations: 224 bytes)
 
 Calculating the density gradient of imidazol at a point (x10) [rs]:
-  115.989 μs (2 allocations: 224 bytes)
   109.139 μs (2 allocations: 224 bytes)
 
 Calculating the density gradient of imidazol at a point (x10) [cpp]:
