@@ -68,84 +68,84 @@ pub extern fn density_gradient(
 
     for ic in (0 as usize)..(natm as usize) {
         // Atomic coordinates of this center
-        xcoor[0] = point[0] - xyz[[ic,0]];
-        xcoor[1] = point[1] - xyz[[ic,1]];
-        xcoor[2] = point[2] - xyz[[ic,2]];
+        unsafe {*xcoor.uget_mut(0) = point.uget(0) - xyz.uget([ic,0])};
+        unsafe {*xcoor.uget_mut(1) = point.uget(1) - xyz.uget([ic,1])};
+        unsafe {*xcoor.uget_mut(2) = point.uget(2) - xyz.uget([ic,2])};
         dis2 = xcoor.mapv(|a| a.powi(2)).sum();
         // Loop over different shells in this atom
-        for m in (0 as usize)..(ngroup[ic] as usize) {
-            k = (nuexp[[ic,m,0]]-1) as usize;
+        for m in (0 as usize)..(unsafe {*ngroup.uget(ic)} as usize) {
+            k = (unsafe {nuexp.uget([ic,m,0])}-1) as usize;
             // Skip to compute this primitive if distance is too big.
-            if dis2 > (rcutte[[ic,m]]).powi(2) { continue };
-            ori = -oexp[k];
+            if dis2 > (unsafe {rcutte.uget([ic,m])}).powi(2) { continue };
+            ori = unsafe {-oexp.uget(k)};
             dp2 = 2.0*ori;
             // All primitives in a shell share the same exponent.
             aexp = (ori*dis2).exp();
             // Loop over the different primitives in this shell.
-            for jj in (0 as usize)..(nzexp[[ic,m]] as usize) {
+            for jj in (0 as usize)..(unsafe {*nzexp.uget([ic,m])} as usize) {
                 // "i" is the original index of the primitive in the WFN.
-                i = (nuexp[[ic,m,jj]]-1) as usize;
-                itip = (ityp[i]-1) as usize;
+                i = (unsafe {nuexp.uget([ic,m,jj])}-1) as usize;
+                itip = (unsafe {ityp.uget(i)}-1) as usize;
                 // Integer coeficients
-                it[0] = nlm[[itip,0]] as usize;
-                it[1] = nlm[[itip,1]] as usize;
-                it[2] = nlm[[itip,2]] as usize;
+                unsafe {*it.uget_mut(0) = *nlm.uget([itip,0]) as usize};
+                unsafe {*it.uget_mut(1) = *nlm.uget([itip,1]) as usize};
+                unsafe {*it.uget_mut(2) = *nlm.uget([itip,2]) as usize};
 
                 for j in (0 as usize)..(3 as usize) {
-                    n = it[j] as usize;
-                    x = xcoor[j];
+                    n = unsafe {*it.uget(j)} as usize;
+                    x = unsafe {*xcoor.uget(j)};
                     if n == 0 {
-                        fun1[j] = dp2 * x;
-                        fun[j] = 1.0;
+                        unsafe {*fun1.uget_mut(j) = dp2 * x};
+                        unsafe {*fun.uget_mut(j) = 1.0};
                     } else if n == 1 {
-                        fun1[j] = 1.0 + dp2 * x * x;
-                        fun[j] = x;
+                        unsafe {*fun1.uget_mut(j) = 1.0 + dp2 * x * x};
+                        unsafe {*fun.uget_mut(j) = x};
                     } else if n == 2 {
                         let x2 = x * x;
-                        fun1[j] = x * (2.0 + dp2 * x2);
-                        fun[j] = x2;
+                        unsafe {*fun1.uget_mut(j) = x * (2.0 + dp2 * x2)};
+                        unsafe {*fun.uget_mut(j) = x2};
                     } else if n == 3 {
                         let x2 = x * x;
-                        fun1[j] = x2 * (3.0 + dp2 * x2);
-                        fun[j] = x * x2;
+                        unsafe {*fun1.uget_mut(j) = x2 * (3.0 + dp2 * x2)};
+                        unsafe {*fun.uget_mut(j) = x * x2};
                     } else if n == 4 {
                         let x2 = x * x;
-                        fun1[j] = x2 * x * (4.0 + dp2 * x2);
-                        fun[j] = x2 * x2;
+                        unsafe {*fun1.uget_mut(j) = x2 * x * (4.0 + dp2 * x2)};
+                        unsafe {*fun.uget_mut(j) = x2 * x2};
                     } else if n == 5 {
                         let x2 = x * x;
-                        fun1[j] = x2 * x2 * (5.0 + dp2 * x2);
-                        fun[j] = x2 * x2 * x;
+                        unsafe {*fun1.uget_mut(j) = x2 * x2 * (5.0 + dp2 * x2)};
+                        unsafe {*fun.uget_mut(j) = x2 * x2 * x};
                     }
                 }
-                f12 = fun[0] * fun[1] * aexp;
-                f123 = f12 * fun[2];
-                fa = fun1[0] * fun[1] * fun[2] * aexp;
-                fb = fun1[1] * fun[0] * fun[2] * aexp;
-                fc = fun1[2] * f12;
+                f12 = unsafe {fun.uget(0)} * unsafe {fun.uget(1)} * aexp;
+                f123 = f12 * unsafe {fun.uget(2)};
+                fa = unsafe {fun1.uget(0)} * unsafe {fun.uget(1)} * unsafe {fun.uget(2)} * aexp;
+                fb = unsafe {fun1.uget(1)} * unsafe {fun.uget(0)} * unsafe {fun.uget(2)} * aexp;
+                fc = unsafe {fun1.uget(2)} * f12;
 
                 // Run over orbitals
                 for j in (0 as usize)..(nmo as usize) {
-                    cfj = coef[[j,i]];
-                    gun[j] += cfj * f123;
-                    gun1[[j,0]] += cfj * fa;
-                    gun1[[j,1]] += cfj * fb;
-                    gun1[[j,2]] += cfj * fc;
+                    cfj = unsafe {*coef.uget([j,i])};
+                    unsafe {*gun.uget_mut(j) += cfj * f123};
+                    unsafe {*gun1.uget_mut([j,0]) += cfj * fa};
+                    unsafe {*gun1.uget_mut([j,1]) += cfj * fb};
+                    unsafe {*gun1.uget_mut([j,2]) += cfj * fc};
                 }
             }
         }
     }
     // Run again over orbitals
     for i in (0 as usize)..(nmo as usize) {
-        fac = occ[i];
-        facgun = fac * gun[i];
+        fac = unsafe {*occ.uget(i)};
+        facgun = fac * unsafe {gun.uget(i)};
         for j in (0 as usize)..(3 as usize) {
-            grad[j] += facgun * gun1[[i,j]];
+            unsafe {*grad.uget_mut(j) += facgun * gun1.uget([i,j])};
         }
     }
-    grad[0] *= 2.0;
-    grad[1] *= 2.0;
-    grad[2] *= 2.0;
+    unsafe {*grad.uget_mut(0) *= 2.0};
+    unsafe {*grad.uget_mut(1) *= 2.0};
+    unsafe {*grad.uget_mut(2) *= 2.0};
 
 }
 #[cfg(test)]
